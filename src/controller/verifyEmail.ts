@@ -24,4 +24,12 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    const {error} = validateLogin(req.body)
+    try {
+        
+    } catch (error: any) {
+        
+    }
+}
 
