@@ -12,14 +12,16 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
             return res.status(404).json({ message: 'user not found' })
         }
         user.status = "Active";
-        user.save((err: any) => {
+        await user.save((err: any) => {
             if (err) {
                 res.status(500).send({ message: err });
                 return;
             }
         })
+        res.redirect('/login')
     } catch (err: any) {
         console.log("error", err)
     }
 }
+
 
