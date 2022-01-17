@@ -1,23 +1,26 @@
+import mongoose from 'mongoose';
 import express, { Application } from 'express';
 import { Request, Response, NextFunction } from 'express';
-import morgan from 'morgan';
 import createError from 'http-errors';
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const path = require('path');
+require('dotenv').config();
 import { mongoDBConnect, mongoMockConnect } from './database/database';
+
 import UserRouter from './routes/userRoute';
 
-const app: Application = express();
+const app = express();
 
 // Express body parser
-app.use(express.json());
 
 // To log our requests using morgan, but only during developement
 if ((process.env.NODE_ENV = 'development')) {
-  app.use(morgan('dev'));
+  app.use(logger('dev'));
+  app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
+  app.use(express.static(path.join(__dirname, 'public')));
 }
 
 // To connect databse from databsefile. Test environment is for jest
@@ -28,8 +31,8 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users');
-app.use('/', UserRouter);
+app.use('/api/v1/users', UserRouter);
+// app.use('/', UserRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {

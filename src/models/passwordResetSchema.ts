@@ -1,11 +1,11 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const tokenSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: 'User',
   },
   token: {
     type: String,
@@ -17,4 +17,5 @@ const tokenSchema = new Schema({
     expires: 1000,
   },
 });
-module.exports = mongoose.model("PasswordResetToken", tokenSchema);
+const PasswordResetToken = mongoose.model('PasswordResetToken', tokenSchema);
+export default PasswordResetToken;
