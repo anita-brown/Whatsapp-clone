@@ -5,7 +5,6 @@ require('dotenv').config();
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
-  dateOfBirth: Date;
   email: string;
   password: string;
   phoneNumber: string;
@@ -56,6 +55,6 @@ const UserSchema = new mongoose.Schema<IUser>(
 );
 
 //Build a User Model
-let User = mongoose.model<IUser>('User', UserSchema);
+let UserTesting = mongoose.model<IUser>('UserTesting', UserSchema);
 //User is used to start testing
-export default User;
+export default UserTesting;

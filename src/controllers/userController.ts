@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { IUser } from '../middlewares/interface';
-import User from '../models/userSchema';
+import UserTesting from '../models/userSchema';
 import { validateSignUp } from '../middlewares/auth';
 //import {sendEmail} from "../utilis/sendEmail";
 import _, { min } from 'lodash';
-const PasswordResetToken = require('../model/passwordResetModel');
+import PasswordResetToken from '../models/passwordResetSchema';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -23,29 +23,38 @@ let transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
-export async function signUp(req: Request, res: Response, next: NextFunction) {
+
+export const signup = async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  //console.log('hbdbjjdkcd');
   const { error } = validateSignUp(req.body);
   if (error) return res.status(400).json(error.details[0].message);
   const { firstName, lastName, email, phoneNumber, password } = req.body;
   try {
-    let user = await User.findOne({
+    let user = await UserTesting.findOne({
       $or: [{ email }, { phoneNumber }],
     });
     if (user) return res.status(400).json('User exists');
-    const newUser = await User.create({
+    const newUser = await UserTesting.create({
       firstName,
       lastName,
       email,
       phoneNumber,
       password: await bcrypt.hash(password, 10),
       if(newUser: any) {
-        return res.status(200).json('you have successfully registered');
+        return res.status(200).json('You have successfully registered');
       },
     });
   } catch (err: any) {
     return res.status(500).json(err.message);
   }
-}
+  // console.log('yessss');
+  res.status(200).json({ msg: 'you have successfully registered' });
+};
+
 export async function forgotPassword(
   req: Request,
   res: Response,
@@ -56,7 +65,7 @@ export async function forgotPassword(
     const schema = Joi.object({ email: Joi.string().email().required() });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json(error.details[0].message);
-    const user = User.findOne(
+    const user = UserTesting.findOne(
       { email: req.body.email },
       async (err: any, user: any) => {
         if (!user) {
@@ -83,7 +92,6 @@ export async function forgotPassword(
         transporter.sendMail(mailOptions, (err: any, info: any) => {
           if (err) {
             res.status(400).json(err.message);
-            // console.log(err.messgae)
           } else {
             //console.log(link)
             res
@@ -100,6 +108,7 @@ export async function forgotPassword(
     console.log(error);
   }
 }
+
 export async function resetPassword(
   req: Request,
   res: Response,
@@ -109,7 +118,7 @@ export async function resetPassword(
     const schema = Joi.object({ password: Joi.string().min(6).required() });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    const user = await User.findById(req.params.userId);
+    const user = await UserTesting.findById(req.params.userId);
     if (!user) return res.status(400).json('invalid link or expired');
     const token = await PasswordResetToken.findOne({
       userId: user._id,
@@ -138,7 +147,7 @@ export async function changePassword(
     const schema = Joi.object({ password: Joi.string().min(6).required() });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    User.findOne({ user: req.body.user.id }, (err: any, user: any) => {
+    UserTesting.findOne({ user: req.body.user.id }, (err: any, user: any) => {
       if (user) {
         console.log(user.user_id);
       } else {

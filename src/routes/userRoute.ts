@@ -1,15 +1,16 @@
-import express, { Router } from 'express';
+import express from 'express';
 import {
-  signUp,
+  signup,
   forgotPassword,
   resetPassword,
   changePassword,
 } from '../controllers/userController';
 
 const router = express.Router();
-router.post('/signup', signUp);
+
+router.route('/signup').post(signup);
 router.post('/forgotPassword', forgotPassword);
-router.patch('/resetPassword:token ', resetPassword);
+router.post('/resetPassword:token ', resetPassword);
 router.patch('/changePassword:token ', changePassword);
 
-export default Router;
+export default router;
