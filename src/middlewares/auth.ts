@@ -8,6 +8,7 @@ export function validateSignUp(user: IUser) {
     email: joi.string().email().max(50).required(),
     phoneNumber: joi.string().length(11).required(),
     password: joi.string().min(5).max(200).required(),
+    password2: joi.ref('password'),
   });
   return schema.validate(user);
 }
