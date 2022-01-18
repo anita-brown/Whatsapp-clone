@@ -16,14 +16,14 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: String,
       trim: true,
       required: [true, 'Please enter you firstname'],
-      min: 5,
+      min: 3,
       max: 20,
     },
     lastName: {
       type: String,
       trim: true,
       required: [true, 'Please enter you firstname'],
-      min: 5,
+      min: 3,
       max: 20,
     },
     email: {
@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     password: {
       type: String,
       required: [true, 'Please provide a password'],
-      min: 6,
+      min: 5,
       max: 200,
     },
   },
@@ -53,6 +53,13 @@ const UserSchema = new mongoose.Schema<IUser>(
     timestamps: true,
   }
 );
+
+// UserSchema.pre('save', function (next) {
+//   if (this.password) {
+//     this.password = hashPassword(this.password);
+//   }
+//   next();
+// });
 
 //Build a User Model
 let UserTesting = mongoose.model<IUser>('UserTesting', UserSchema);
