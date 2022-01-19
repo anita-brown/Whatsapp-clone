@@ -4,6 +4,9 @@ import { mongoDBConnect, mongoMockConnect } from './database/database';
 
 const app: Application = express();
 
+// import routes
+import userRoute from './routes/userRoutes'
+import userFriendRoute from './routes/userFriendRoutes'
 // Express body parser
 app.use(express.json());
 
@@ -20,6 +23,9 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users');
+//  added userRoute
+app.use('/api/v1/users', userRoute);
+app.use('/api/v1/userFriends', userFriendRoute);
+
 
 export default app;
