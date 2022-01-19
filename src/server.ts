@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
 
+import app from './app';
+
 // Configuring environmental varialble
 dotenv.config();
 
-import app from './app';
 
 // Port implementation
 const port = process.env.PORT || 3050;
