@@ -7,10 +7,11 @@ import {
 } from '../controllers/userController';
 
 const router = express.Router();
-
+//reset
 router.route('/signup').post(signup);
 router.post('/forgotPassword', forgotPassword);
-router.post('/resetPassword:token ', resetPassword);
-// router.post('/changePassword:token', changePassword)
+router.post('/resetPassword/:hashedToken', resetPassword);
+// router.post('/updatePassword/:token', updatePassword);
+router.patch('/changePassword/:userId', changePassword);
 
 export default router;

@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export interface passwordModel extends Document {
-  user: string;
-  _id: string;
+  userId: string;
+  token: string;
+  createdAt: Date;
 }
 const tokenSchema = new Schema({
   userId: {
@@ -19,11 +20,13 @@ const tokenSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 1000, //check the expiry timing
+    expires: 36000, //check expiry timing
   },
 });
+
 const PasswordResetToken = mongoose.model<passwordModel>(
   'PasswordResetToken',
   tokenSchema
 );
+
 export default PasswordResetToken;

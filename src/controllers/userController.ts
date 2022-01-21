@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
-import { IUser } from '../middlewares/interface';
+import bcrypt, { hash } from 'bcrypt';
+// import { IUser } from '../middlewares/interface';
+import IUser from '../models/userSchema';
 import UserTesting from '../models/userSchema';
 import { validateSignUp } from '../middlewares/auth';
 //import {sendEmail} from "../utilis/sendEmail";
@@ -8,30 +9,27 @@ import _, { min } from 'lodash';
 import PasswordResetToken, {
   passwordModel,
 } from '../models/passwordResetSchema';
-import Joi from 'joi';
+import Joi, { ref } from 'joi';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import router from '../routes/userRoute';
 require('dotenv').config();
 
-// user: 'hademath1@gmail.com',
-// pass: process.env.PASS as string,
-
 export const signup = async function (
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  //console.log('hbdbjjdkcd');
   const { error } = validateSignUp(req.body);
   if (error) return res.status(400).json(error.details[0].message);
   const { firstName, lastName, email, phoneNumber, password } = req.body;
+
   try {
     let user = await UserTesting.findOne({
       $or: [{ email }, { phoneNumber }],
     });
-    if (user) return res.status(400).json('User exists'); //this shows user account alreadey exists...Otherwise create new user
+    if (user) return res.status(400).json('User exists');
     const newUser = await UserTesting.create({
       firstName,
       lastName,
@@ -71,23 +69,20 @@ export async function forgotPassword(
         }
 
         //2nd Step: Generate Random Reset token
-        let token = await PasswordResetToken.findOne({ userId: user._id });
-        if (!token) {
-          token = await new PasswordResetToken({
+        let hashedToken = await PasswordResetToken.findOne({
+          userId: user._id,
+        });
+
+        if (!hashedToken) {
+          hashedToken = await new PasswordResetToken({
             userId: user._id,
             token: crypto.randomBytes(32).toString('hex'),
           }).save();
         }
-        //the token above is created is a reset token sent to the user to use in reseting his password
-        //just like passwords , we should never store plain reset tokens in our database
 
-        const link = `${process.env.BASE_URL as string}/reset_password/${
-          user._id
-        }/${token}`;
+        const link = `http://${req.headers.host}/api/v1/users/resetPassword/${user._id},${hashedToken.token}`;
+        // const link = `http://${req.headers.host}/api/v1/users/resetPassword/${hashedToken.token}`;
 
-        //3rd Step: Send back to user's email
-        //While using nodemailer(to send emails),
-        //a.we first create a transporter
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
@@ -102,110 +97,121 @@ export async function forgotPassword(
           to: user.email,
           subject: 'Reset Password Link',
           text: 'text',
-          html: `<h1> Forgot your password? \n
-          Please click on the link below to reset your password!! 👧 <h1>
-              <h3> The link sent will expire in 10 minutes <h3>
-              <h3> If you didn't forget your password, please ignore this email <h3>
-
+          html: `<h1> Forgot your password? </h1> 
+              <h1>Please click on the link below to reset your password!! 👧 </h1>
+              <h3> The link sent will expire in 10 minutes </h3>
+              <h3> If you didn't forget your password, please ignore this email. </h3>
           <p style="color:red; font-size:26px;"><a href="${link}"><i class="fas fa-window-restore"></i>Reset Password </a></p1>`,
         };
 
         //c.we then actually send the mail
-        await transporter.sendMail(mailOptions, (err: any, info: any) => {
+        transporter.sendMail(mailOptions, (err: any, info: any) => {
           if (err) throw err;
           console.log('Message sent: %s', info.messageId);
         });
-        res
-          .status(200)
-          .json({ status: 'success', message: 'Token sent to the email' });
+        res.status(200).json({
+          status: 'success',
+          message:
+            'Password Reset Link has been sent! Please check your email...📨',
+        });
       }
     );
   } catch (error) {
     res.status(500).json('An error occured');
-    // console.log(error);
     console.log('There was an error sending the email. Try again later!');
   }
 }
 
-//This route-handler resets the user's password
 export async function resetPassword(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    //validating user inputs. steps:
-    //1.we first get user based on given token
-    //2.if token hasn't expired, set the new password
-    //3.update changed password's property for the user
-    //Log the user in, send jwt
-    const schema = Joi.object({ password: Joi.string().min(6).required() });
-    const { error } = schema.validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    const user = await UserTesting.findById(req.params.userId);
-    if (!user) return res.status(400).json('invalid link or expired');
-    const token = await PasswordResetToken.findOne({
-      userId: user._id,
-      token: req.params.token,
+    const passwordResetSchema = Joi.object({
+      password: Joi.string()
+        .min(6)
+        .required()
+        .required()
+        .error(new Error('Password most match...')),
+      repeatPassword: Joi.ref('password'),
     });
-    if (!token) return res.status(400).json('Invalid link or expired token');
-    const salt = await bcrypt.genSalt(10);
-    password: await bcrypt.hash(req.body.password, salt),
-      // user.password = bcrypt.hash(req.body.password, salt);
-      (user.password = req.body.password);
-    await user.save();
-    await token.delete(); //this delets the token after set time.
-    res.send('password reset sucessfully.');
-  } catch (error) {
-    res.send('An error occured');
-    console.log(error);
-  }
-}
 
-interface customRequest extends Request {
-  user: passwordModel;
+    const { error } = passwordResetSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let userId = req.params.hashedToken.split(',')[0];
+    let returnToken = req.params.hashedToken.split(',')[1];
+
+    const user = await UserTesting.findOne({ _id: userId });
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json('invalid link or expired');
+    }
+
+    const verifyToken = await PasswordResetToken.findOne({
+      token: returnToken,
+    });
+
+    if (verifyToken) {
+      const hashPassword = await bcrypt.hash(req.body.password, 10);
+
+      UserTesting.findOneAndUpdate(
+        { _id: user._id },
+        { password: hashPassword },
+        (err: any, doc: any) => {
+          if (err) return res.json('error occured in password reset');
+
+          res.json({ msg: 'Password reset successfully... ' });
+          PasswordResetToken.findOneAndDelete({ userId: user._id });
+        }
+      );
+    }
+  } catch (error) {
+    console.log('Internal Server Error!');
+  }
 }
 
 export async function changePassword(
-  req: customRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
+  const schema = Joi.object({ password: Joi.string().min(6).required() });
+  const { error } = schema.validate(req.body);
+  const { userId } = req.params;
+  const { oldPassword, password } = req.body;
+
   try {
-    const schema = Joi.object({ password: Joi.string().min(6).required() });
-    const { error } = schema.validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // we get the user
+    const user = await UserTesting.findById(req.params.userId);
+    if (!user) {
+      return res.status(400).send('User not found');
+    }
 
-    const passwordFields = {
-      password: '',
-    };
-    UserTesting.findOne({ user: req.body.user.id }, (err: any, user: any) => {
-      // console.log(user.user_id);
-
-      if (req.body.password) passwordFields.password = req.body.password;
-
-      UserTesting.findOneAndUpdate(
-        { user: req.user!._id },
-        { $set: passwordFields },
-        { new: true }
-      )
-        .then((user) =>
-          res
-            .status(200)
-            .json({ success: true, message: 'Password changed successfully' })
-        )
-        .catch((err) =>
-          res.status(400).json({
-            success: false,
-            message: 'Unsuccessful \n Try again later',
-          })
-        );
-
-      res
-        .status(200)
-        .json({ success: true, message: 'Password changed successfully.' });
+    // validate old password
+    bcrypt.compare(oldPassword, password, function (err, isMatch) {
+      if (err) throw err;
+      if (isMatch) {
+        console.log('passwords match');
+      }
     });
-  } catch (error) {
-    console.error(error);
+
+    // hash new password
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    let salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    // update user's password
+    user.password = hashedPassword;
+    const updatedUser = await user.save();
+
+    return res.json({ user: updatedUser });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Something went wrong. Try again');
   }
 }
+
+export default router;

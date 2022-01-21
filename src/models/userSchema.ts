@@ -48,18 +48,12 @@ const UserSchema = new mongoose.Schema<IUser>(
       min: 5,
       max: 200,
     },
+    // isVerified: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
-
-// UserSchema.pre('save', function (next) {
-//   if (this.password) {
-//     this.password = hashPassword(this.password);
-//   }
-//   next();
-// });
 
 //Build a User Model
 let UserTesting = mongoose.model<IUser>('UserTesting', UserSchema);
