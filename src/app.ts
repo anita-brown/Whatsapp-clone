@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
+import emailRoutes from './routes/emailVerify'
 
 const app: Application = express();
 
@@ -20,6 +21,6 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users');
+app.use('/api/v1/users', emailRoutes);
 
 export default app;
