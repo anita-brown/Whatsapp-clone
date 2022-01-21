@@ -1,3 +1,5 @@
+// import bcrypt from 'bcrypt';
+// import UserTesting from '../models/userSchema';
 // import { options } from 'joi';
 // // import nodemailer from 'nodemailer';
 // const nodemailer = require('nodemailer');
@@ -23,3 +25,12 @@
 // };
 
 // export default sendEmail;
+
+// const token = bcrypt.hash(password, 10);
+// const user = UserTesting.findOne({
+//   PasswordResetToken: token,
+//   PasswordResetExpires: { $gt: Date.now() },
+// });
+// if (!user) {
+//   return res.status(404).json({ message: 'Token is invalid or has expired' });
+// }
