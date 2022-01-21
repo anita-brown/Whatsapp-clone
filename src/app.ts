@@ -20,6 +20,5 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users');
 
 export default app;
