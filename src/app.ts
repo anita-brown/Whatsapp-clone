@@ -16,7 +16,7 @@ if ((process.env.NODE_ENV = 'development')) {
 if (process.env.NODE_ENV === 'test') {
   mongoMockConnect();
 } else {
-  mongoDBConnect();
+ mongoDBConnect();
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
