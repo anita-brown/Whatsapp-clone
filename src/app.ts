@@ -12,6 +12,9 @@ if ((process.env.NODE_ENV = 'development')) {
   app.use(morgan('dev'));
 }
 
+// Cookie session middleware
+app.use(cookieSession({}));
+
 // To connect databse from databsefile. Test environment is for jest
 if (process.env.NODE_ENV === 'test') {
   mongoMockConnect();
@@ -20,6 +23,6 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users');
+app.use('/api/v1/users', userSignupRoutes);
 
 export default app;
