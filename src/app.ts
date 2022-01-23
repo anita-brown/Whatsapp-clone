@@ -4,6 +4,7 @@ import passport from 'passport';
 import cookieSession from 'cookie-session';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
 import authRoute from './routes/authRoute';
+import profileRoute from './routes/profileRoute';
 
 const app: Application = express();
 
@@ -18,7 +19,7 @@ if ((process.env.NODE_ENV = 'development')) {
 // Cookie session middleware to help remember user sessions.
 app.use(
   cookieSession({
-    name: 'session',
+    // name: 'session',
     keys: [process.env.COOKIE_KEY!],
     maxAge: 24 * 60 * 60 * 100,
   })
@@ -36,10 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routers upon which applications will run. To be connected to the routes files.
+app.use('/profile', profileRoute);
 app.use('/api/v1/users', authRoute);
 
 export default app;
-
-// Routers upon which applications will run. To be connected to the routes files.
-// app.use('/profile', profileRoute);
-// app.use('/api/v1/auth', authRoute);

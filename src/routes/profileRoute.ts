@@ -4,8 +4,9 @@ import { protect } from '../controllers/authController';
 
 const router = express.Router();
 
-router.get('/', protect, (req: CustomUserReq, res) => {
-  res.send('You are logged in, Welcome ... ' + req.user!.fullname);
-});
+// router.get('/', protect, (req: CustomUserReq, res) => {
+//   console.log(req.user);
+//   res.send('You are logged in, Welcome ... ' + req.user!.fullname);
+// });
 
 export default router;
