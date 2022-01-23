@@ -1,14 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt, { hash } from 'bcrypt';
-// import { IUser } from '../middlewares/interface';
 import IUser from '../models/userSchema';
 import UserTesting from '../models/userSchema';
 import { validateSignUp } from '../middlewares/auth';
-//import {sendEmail} from "../utilis/sendEmail";
-import _, { min } from 'lodash';
-import PasswordResetToken, {
-  passwordModel,
-} from '../models/passwordResetSchema';
+import PasswordResetToken from '../models/passwordResetSchema';
 import Joi, { ref } from 'joi';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -45,7 +40,6 @@ export const signup = async function (
   } catch (err: any) {
     return res.status(500).json(err.message);
   }
-  // console.log('yessss');
   res.status(200).json({ msg: 'You have successfully registered!' });
 };
 
@@ -55,7 +49,6 @@ export async function forgotPassword(
   res: Response,
   next: NextFunction
 ) {
-  //res.json(" you just test this")
   try {
     //First step: Get user based on POSTED email
     const schema = Joi.object({ email: Joi.string().email().required() });
@@ -68,7 +61,6 @@ export async function forgotPassword(
           return res.status(404).json("User with given email doesn't exist");
         }
 
-        //2nd Step: Generate Random Reset token
         let hashedToken = await PasswordResetToken.findOne({
           userId: user._id,
         });
@@ -81,7 +73,6 @@ export async function forgotPassword(
         }
 
         const link = `http://${req.headers.host}/api/v1/users/resetPassword/${user._id},${hashedToken.token}`;
-        // const link = `http://${req.headers.host}/api/v1/users/resetPassword/${hashedToken.token}`;
 
         const transporter = nodemailer.createTransport({
           service: 'gmail',
@@ -91,7 +82,7 @@ export async function forgotPassword(
           },
         });
 
-        //b.define the email options
+      
         const mailOptions = {
           from: 'mavidmuchi1234@gmail.com',
           to: user.email,
@@ -104,7 +95,7 @@ export async function forgotPassword(
           <p style="color:red; font-size:26px;"><a href="${link}"><i class="fas fa-window-restore"></i>Reset Password </a></p1>`,
         };
 
-        //c.we then actually send the mail
+
         transporter.sendMail(mailOptions, (err: any, info: any) => {
           if (err) throw err;
           console.log('Message sent: %s', info.messageId);
@@ -181,36 +172,34 @@ export async function changePassword(
   const schema = Joi.object({ password: Joi.string().min(6).required() });
   const { error } = schema.validate(req.body);
   const { userId } = req.params;
-  const { oldPassword, password } = req.body;
+  const { oldPassword, password, confirmPassword } = req.body;
 
   try {
-    // we get the user
+    console.log(oldPassword, password);
     const user = await UserTesting.findById(req.params.userId);
     if (!user) {
       return res.status(400).send('User not found');
     }
 
-    // validate old password
-    bcrypt.compare(oldPassword, password, function (err, isMatch) {
-      if (err) throw err;
-      if (isMatch) {
-        console.log('passwords match');
-      }
-    });
+    const result = await bcrypt.compare(oldPassword, user.password);
+    if (!result) {
+      throw new Error('Old password doesnt match');
+    }
 
-    // hash new password
-    // const hashedPassword = await bcrypt.hash(password, 10);
+    if (password !== confirmPassword) {
+      throw new Error('new password doesnt match confirm password!');
+    }
+
     let salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    // update user's password
     user.password = hashedPassword;
     const updatedUser = await user.save();
 
     return res.json({ user: updatedUser });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
-    return res.status(500).send('Something went wrong. Try again');
+    return res.status(500).send(err.message);
   }
 }
 
