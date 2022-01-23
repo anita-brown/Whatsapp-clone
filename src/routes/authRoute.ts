@@ -25,7 +25,11 @@ router.get(
 );
 
 // callback route to redirect
-router.get('/facebook/redirect', passport.authenticate('facebook'), redirect);
+router.get(
+  '/facebook/redirect',
+  passport.authenticate('facebook', { failureRedirect: '/api/v1/users/login' }),
+  redirect
+);
 
 router.get('/logout', logout);
 
