@@ -14,7 +14,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-console.log(process.env.CLIENT_ID_FB);
+// console.log(process.env.CLIENT_ID_FB);
 ///
 export const setupFB = () => {
   passport.use(
@@ -22,9 +22,10 @@ export const setupFB = () => {
       {
         clientID: process.env.CLIENT_ID_FB!,
         clientSecret: process.env.CLIENT_SECRET_FB!,
-        callbackURL: 'http://localhost:3050/api/v1/auth/facebook/redirect',
+        callbackURL: 'http://localhost:3050/api/v1/users/facebook/redirect',
       },
       function (accessToken, refreshToken, profile, done) {
+        console.log(profile);
         // Check if user already Exist
         UserFB.findOne({ facebookId: profile.id }).then((currentUser) => {
           if (currentUser) {
