@@ -1,16 +1,14 @@
 import mongoose, { Schema } from "mongoose"
+import { IUser } from "../utils/utils";
 
 // import bcrypt from "bcrypt";
 
-export const userSchema = new mongoose.Schema({
+export const userSchema: Schema<IUser> = new mongoose.Schema({
     firstName: {
         type: String,
-
     },
-
     lastName: {
         type: String,
-
     },
     email: {
         type: String,
@@ -23,7 +21,7 @@ export const userSchema = new mongoose.Schema({
         // required: [true, 'Put in strong password'],
         select: false
     },
-
+    // friend:
 },
     {
     toJSON: { virtuals: true },
