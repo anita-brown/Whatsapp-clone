@@ -1,7 +1,7 @@
 
 import  { Request, Response } from "express";
 import{UserFr} from "../models/userModel"
-import { reqUser } from "../utils/utils";
+import { ReqUser } from "../utils/customReq";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -12,7 +12,7 @@ const mySecret = "ughyjkkoiughjkhu3jkhu748uhjki78h";
 
 export const getAllUser = (req: Request, res: Response) => {
     try {
-        const data = UserFr.find({}, (err: any, users: reqUser) => {
+        const data = UserFr.find({}, (err: any, users: ReqUser) => {
             if (err) return res.json({ message: "error occur in getting all users..." });
             if (users) {
                 res.json(users);
