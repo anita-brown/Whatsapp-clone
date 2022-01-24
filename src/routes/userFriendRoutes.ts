@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 
-router.get("/", getAllFriends)
-router.post("/add", addFriends)
+// router.get("/", getAllFriends)
+// router.post("/add", addFriends)
 
 
 
