@@ -1,7 +1,8 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
-
+// routers
+const userRouter = require('./routes/userrouter');
 const app: Application = express();
 
 // Express body parser
@@ -16,8 +17,10 @@ if ((process.env.NODE_ENV = 'development')) {
 if (process.env.NODE_ENV === 'test') {
   mongoMockConnect();
 } else {
- mongoDBConnect();
+  mongoDBConnect();
 }
+
+app.use('/api/v1/users', userRouter);
 
 // Routers upon which applications will run. To be connected to the routes files.
 
