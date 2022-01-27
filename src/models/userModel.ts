@@ -1,10 +1,34 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { IUser } from '../utils/utils';
 
-const userSchema = new mongoose.Schema({
-  fullname: String,
-  facebookId: String,
-});
+// import bcrypt from "bcrypt";
 
-const UserFB = mongoose.model('UserFB', userSchema);
+export const userSchema: Schema<IUser> = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      // required: [true, 'A user must have a valid email'],
+      lowercase: true,
+      // unique: true
+    },
+    password: {
+      type: String,
+      // required: [true, 'Put in strong password'],
+      select: false,
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
-export default UserFB;
+export const UserFr = mongoose.model('UserFr', userSchema);
+
+export default UserFr;
