@@ -1,10 +1,8 @@
 
 import { Request, Response, NextFunction } from "express";
-import mongoose from "mongoose";
 import { Friend } from '../models/userFriendModel'
 import UserFr from "../models/userModel";
 import { ReqUser } from "../utils/customReq";
-// import { reqUser } from "../utils/utils"
 
 export const getAllFriends = async (req: ReqUser, res: Response, next: NextFunction) => {
     try {
