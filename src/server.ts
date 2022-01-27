@@ -1,10 +1,7 @@
 import app from './app';
-import dotenv from 'dotenv';
 import http from 'http';
 
 const debug = require('debug')('whatsapp-clone-app:server');
-
-// Port implementation
 
 const normalizePort = (val: string) => {
   const port = parseInt(val, 10);
@@ -29,4 +26,3 @@ const server = http.createServer(app);
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
