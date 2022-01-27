@@ -12,11 +12,14 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
+
+// routers
+
+const app: Application = express();
+
 import UserRouter from './routes/userRoute';
 
 dotenv.config();
-
-const app = express();
 
 app.use(express.json());
 
@@ -49,6 +52,10 @@ if (process.env.NODE_ENV === 'test') {
   mongoDBConnect();
 }
 
+
+
+// Routers upon which applications will run. To be connected to the routes files.
+
 // Initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -78,5 +85,6 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     error: err.message,
   });
 });
+
 
 export default app;
