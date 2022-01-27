@@ -1,4 +1,3 @@
-import morgan from 'morgan';
 import emailRoutes from './routes/emailVerify'
 import createError from 'http-errors';
 import express, { Request, Response, NextFunction } from 'express';
@@ -6,11 +5,14 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
-import userSignUpRoutes from "./routes/usersAuth";
 import { mongoDBConnect, mongoMockConnect } from "./database/database";
+import UserRouter from './routes/userRoute';
+
+
+//import routes
 
 dotenv.config();
-
+//Express body parser
 const app = express();
 
 
@@ -29,8 +31,8 @@ if (process.env.NODE_ENV === "test") {
 
 
 // Routers upon which applications will run. To be connected to the routes files.
+app.use('/api/v1/users', UserRouter);
 //User auth routes
-app.use('/api/v1/auth', userSignUpRoutes);
 app.use('/api/v1/users', emailRoutes);
 
 
