@@ -31,8 +31,10 @@ router
   })
   .patch(async (req: Request, res: Response) => {
     try {
-      const updatedUser = User.findAndUpdate(req.params.id, req.body, {
+      console.log(req.body)
+      const updatedUser = await User.findOneAndUpdate(req.params.id, req.body, {
         new: true,
+        runValidators: true,
       });
       res.status(200).json({
         message: 'success',
