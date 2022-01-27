@@ -20,7 +20,7 @@ export const protectedPage = (req: Request, res: Response) => {
 
 export const logout = (req: Request, res: Response) => {
   req.logOut();
-  req.session.destroy(() => {});
+  req.session!.destroy(() => {});
   res.send('Goodbye');
 };
 
