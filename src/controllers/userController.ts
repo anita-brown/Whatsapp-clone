@@ -82,7 +82,6 @@ export async function forgotPassword(
           },
         });
 
-      
         const mailOptions = {
           from: 'mavidmuchi1234@gmail.com',
           to: user.email,
@@ -94,7 +93,6 @@ export async function forgotPassword(
               <h3> If you didn't forget your password, please ignore this email. </h3>
           <p style="color:red; font-size:26px;"><a href="${link}"><i class="fas fa-window-restore"></i>Reset Password </a></p1>`,
         };
-
 
         transporter.sendMail(mailOptions, (err: any, info: any) => {
           if (err) throw err;
@@ -135,7 +133,7 @@ export async function resetPassword(
     let returnToken = req.params.hashedToken.split(',')[1];
 
     const user = await UserTesting.findOne({ _id: userId });
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       return res.status(404).json('invalid link or expired');
@@ -175,7 +173,7 @@ export async function changePassword(
   const { oldPassword, password, confirmPassword } = req.body;
 
   try {
-    console.log(oldPassword, password);
+    // console.log(oldPassword, password);
     const user = await UserTesting.findById(req.params.userId);
     if (!user) {
       return res.status(400).send('User not found');
