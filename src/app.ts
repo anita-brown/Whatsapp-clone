@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import session from 'express-session';
 
-import { setupGoogle } from './passport/passport';
-import authRoutes from './routes/authRoutes';
+import { setupGoogle } from './passport/passport-ggle';
+import authRoutes from './routes/authRouteGgle';
 
 dotenv.config();
 

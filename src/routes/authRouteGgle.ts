@@ -1,16 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { isLoggedIn } from '../controllers/authController';
+import { isLoggedIn } from '../controllers/authControllerGgle';
 import {
   signupGoogle,
   failedGoogleSignup,
   protectedPage,
   logout,
-} from '../controllers/authController';
+} from '../controllers/authControllerGgle';
 
 const router = express.Router();
 
-router.get('/signup', signupGoogle);
+router.get('/signup/google', signupGoogle);
 
 router.get(
   '/auth/google',
