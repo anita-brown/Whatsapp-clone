@@ -64,18 +64,28 @@ export const signup = async (
           });
         });
 
-        
-        const output = `
-           <h1>Hello</h1>
 
-             <p>Thanks for registering on our site.
-               Please click on the link below to verify your email
+        const output = `<div style="background-color:#fbfbfb; width:90%; height: 90%;">
+            <div style="background-color:white; width:60%; margin: 0 auto; padding: 20px">
+            
+           <h1>👋🏻 Hi ${newUser.firstName}</h1>
+           
+          
+            <hr/>
+             <p>We are happy you signed up on whatsapp.
+               To start exploring our App and chat with your
+               friends please confirm your email address.
              </p>
+            <br/>
+           
+           
+         <a href="http://${req.headers.host}/api/v1/auth/verify-email?pass=${newUser.confirmCode}" target="_blank" style="text-decoration:none; background-color:#25D366; color:white; padding: 15px; border-radius: 5px; width: 100px; margin-bottom: 5px;">Verify now!</a>
+         <br/>
 
-
-         <a href="http://${req.headers.host}/verify-email?pass=${newUser.confirmCode}" target="_blank">VERIFY YOUR ACCOUNT</a>
-
-        
+            <p style="margin-top:10px">💚 Welcome to Whatsapp!</p>
+            <p style="color:grey; font-size: 10px;">WhatsApp Awesome Team B </p>
+            </div>
+            </div>
         `;
 
         const transporter = nodemailer.createTransport({
@@ -87,7 +97,7 @@ export const signup = async (
         });
 
         const mailOptions = {
-          from: 'mavidmuchi@gmail.com>', //sender address
+          from: '"WhatsApp-Team" <mavidmuchi@gmail.com>', //sender address
           to: newUser.email, //list of receivers
           subject: 'Thank you registering', //Subject line
           html: output, //body of the mail
@@ -112,7 +122,7 @@ export const signup = async (
             res.status(400).json({ message: 'Unable to save user' })
           );
       }
-    }).catch((err) => res.status(400).json({ success : false, message: "Unsuccessful"}))
+    }).catch((err) => res.status(400).json({ success: false, message: "Unsuccessful" }))
   } catch (error) {
     console.log(error);
   }
