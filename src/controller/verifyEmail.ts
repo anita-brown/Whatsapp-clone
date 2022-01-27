@@ -33,9 +33,9 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     } else {
         try {
             const findUser = await User.findOne({ email: req.body.email })
-            if (!findUser) return res.status(400).json({ message: 'invalid login credentials' })
+            if (!findUser) return res.status(400).json({ message: 'user does not exist, kindly signup' })
             const match = await bcrypt.compare(req.body.password, findUser.password)
-            if (!match) return res.status(400).json({ message: 'invalid login credentials' })
+            if (!match) return res.status(400).json({ message: 'invalid password' })
             if (findUser.status === 'Pending') return res.status(403).json({
                 message: `kindly verify your account via the email sent to you`
             })
