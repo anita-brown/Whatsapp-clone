@@ -6,7 +6,7 @@ import {
   logout,
   protect,
   profile,
-} from '../controllers/authController';
+} from '../controllers/authControllerFB';
 import setupFB from '../passport/passport-FB-Setup';
 
 const router = express.Router();
@@ -14,8 +14,6 @@ const router = express.Router();
 setupFB();
 
 router.get('/login', login);
-
-// router.get('/facebook', passport.authenticate('facebook'));
 
 router.get(
   '/facebook',

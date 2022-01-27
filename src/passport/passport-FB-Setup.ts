@@ -14,7 +14,6 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// console.log(process.env.CLIENT_ID_FB);
 ///
 export const setupFB = () => {
   passport.use(

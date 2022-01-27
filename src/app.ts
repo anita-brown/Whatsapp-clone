@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import passport from 'passport';
 import cookieSession from 'cookie-session';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
-import authRoute from './routes/authRoute';
+import authRouteFB from './routes/authRouteFB';
 
 const app: Application = express();
 
@@ -36,6 +36,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routers upon which applications will run. To be connected to the routes files.
-app.use('/api/v1/users', authRoute);
+app.use('/api/v1/users', authRouteFB);
 
 export default app;

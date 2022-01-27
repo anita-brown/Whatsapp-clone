@@ -6,7 +6,7 @@ dotenv.config();
 import app from './app';
 
 // Port implementation
-const port = process.env.PORT || 3050;
+const port = process.env.PORT || 4001;
 
 // Starting server
 const server = app.listen(port, () => {

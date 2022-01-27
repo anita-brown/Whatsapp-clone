@@ -4,14 +4,12 @@ import { CustomUserReq } from '../models/custom';
 export const redirect = (req: Request, res: Response, next: NextFunction) => {
   // Login with facebook
   res.redirect('/api/v1/users/profile');
-  // res.send(req.user);
 };
 
 export const protect = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
     res.redirect('/api/v1/users/login');
   } else {
-    // if logged in
     next();
   }
 };
