@@ -6,7 +6,7 @@ const app: Application = express();
 
 // import routes
 import userRoute from './routes/userRoutes'
-import userFriendRoute from './routes/userFriendRoutes'
+
 // Express body parser
 app.use(express.json());
 
