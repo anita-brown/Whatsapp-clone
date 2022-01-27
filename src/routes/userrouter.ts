@@ -60,6 +60,7 @@ router
       const result = await cloudinary.uploader.upload(req.file!.path);
       // replace the old image with the new one and add it to the request body
       req.body.avatar = result.url;
+      req.body.avatarId = result.public_id;
       const updatedUser = await User.findOneAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
