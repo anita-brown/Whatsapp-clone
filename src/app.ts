@@ -1,4 +1,6 @@
-import morgan from 'morgan';
+import session from 'express-session';
+import { setupGoogle } from './passport/passport-ggle';
+import authRoutes from './routes/authRouteGgle';
 import passport from 'passport';
 import cookieSession from 'cookie-session';
 import authRouteFB from './routes/authRoute';
@@ -13,9 +15,18 @@ import { mongoDBConnect, mongoMockConnect } from './database/database';
 import UserRouter from './routes/userRoute';
 
 dotenv.config();
-//Express body parser
+
 const app = express();
 
+app.use(express.json());
+
+setupGoogle();
+
+app.use(session({ secret: process.env.SESSION_SECRET as string }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', authRoutes);
 // Cookie session middleware to help remember user sessions.
 app.use(
   cookieSession({
