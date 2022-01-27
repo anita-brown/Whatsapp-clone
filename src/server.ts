@@ -1,13 +1,32 @@
 import app from './app';
 import dotenv from 'dotenv';
+import http from 'http';
 
-// Configuring environmental varialble
-dotenv.config();
+const debug = require('debug')('whatsapp-clone-app:server');
 
 // Port implementation
-const port = process.env.PORT || 3050;
 
-// Starting server
-const server = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const normalizePort = (val: string) => {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    return val;
+  }
+
+  if (port >= 0) {
+    return port;
+  }
+
+  return false;
+};
+
+const port = normalizePort(process.env.PORT || '3050');
+
+app.set('port', port);
+
+const server = http.createServer(app);
+
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
+
