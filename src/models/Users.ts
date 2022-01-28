@@ -67,7 +67,6 @@ const userAuthSchema = new Schema(
     },
     confirmCode: {
       type: String,
-      required: true,
     },
     status: {
       type: String,

@@ -10,37 +10,38 @@ export const setupGoogle = () => {
         callbackURL: process.env.CALLBACK_URL as string,
         passReqToCallback: true,
       },
-      function (
+      async function (
         request: Request,
         accessToken: any,
         refreshToken: any,
         profile: any,
         cb: Function
       ) {
-        const user = {
-          firstName: profile._json.given_name,
-          lastName: profile._json.family_name,
-          email: profile._json.email,
-          googleId: profile.id,
-          isVerified: profile._json.email_verified,
-          status: 'Active',
-          password: 'GOOGLE',
-          // phoneNumber: profile
-        };
-        Users.findOne({ googleId: profile.id }).then((currentUser) => {
+        try {
+          const user = {
+            firstName: profile._json.given_name,
+            lastName: profile._json.family_name,
+            email: profile._json.email,
+            googleId: profile.id,
+            isVerified: profile._json.email_verified,
+            status: 'Active',
+            password: 'GOOGLE',
+            // phoneNumber: profile
+          };
+
+          const currentUser =
+            (await Users.findOne({
+              googleId: profile.id!,
+            })) || (await Users.findOne({ email: profile._json.email! }));
           if (currentUser) {
             return cb(null, profile);
-          } else {
-            new Users(user)
-              .save()
-              .then((newUser) => {
-                return cb(null, profile);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
           }
-        });
+
+          await Users.create(user);
+          return cb(null, profile);
+        } catch (error) {
+          console.log(error);
+        }
       }
     )
   );

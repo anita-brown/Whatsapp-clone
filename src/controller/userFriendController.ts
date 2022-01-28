@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Friend } from '../models/userFriendModel';
-import {UserAuth} from '../models/Users';
+import { UserAuth } from '../models/Users';
 import { CustomRequest } from '../utils/custom';
 import { ReqUser } from '../utils/customReq';
 
@@ -13,8 +13,8 @@ export const getAllFriends = async (
 ) => {
   try {
     // req.user!.id = "61e6b1b5297bef3564732c7b"
-    const userLogin = '61f41308c8b7de8620126a76';
-
+    const userLogin = req.user!.id;
+    console.log(userLogin);
 
     const friends = await Friend.find({ users: userLogin });
 
@@ -36,12 +36,11 @@ export const addFriends = async (
   next: NextFunction
 ) => {
   try {
-    const userId = '61f41308c8b7de8620126a76';
-    // const userId = req.user!.id
+    // const userId = '61f41308c8b7de8620126a76';
+    const userId = req.user!.id;
     let friendId = '';
 
     const { email } = req.body;
-
 
     const newFriend = await UserAuth.find({ email });
     friendId = newFriend[0]._id;
