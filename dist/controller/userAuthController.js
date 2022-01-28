@@ -27,7 +27,8 @@ const signup = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* 
         }
         yield Users_1.UserAuth.findOne({
             email: req.body.email,
-        }).then((user) => __awaiter(void 0, void 0, void 0, function* () {
+        })
+            .then((user) => __awaiter(void 0, void 0, void 0, function* () {
             if (user) {
                 errors.email = 'Email already exists';
                 return res.status(400).json({
@@ -107,9 +108,13 @@ const signup = (req, res, _next) => __awaiter(void 0, void 0, void 0, function* 
                     success: true,
                     user,
                 }))
-                    .catch((err) => res.status(400).json({ message: 'Unable to save user' }));
+                    .catch((err) => {
+                    console.log(err);
+                    return res.status(400).json({ message: 'Unable to save user' });
+                });
             }
-        })).catch((err) => res.status(400).json({ success: false, message: "Unsuccessful" }));
+        }))
+            .catch((err) => res.status(400).json({ success: false, message: 'Unsuccessful' }));
     }
     catch (error) {
         console.log(error);

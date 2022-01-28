@@ -91,9 +91,10 @@ function resetPassword(req, res, next) {
                     .error(new Error('Password most match...')),
                 repeatPassword: joi_1.default.ref('password'),
             });
-            const { error } = passwordResetSchema.validate(req.body);
-            if (error)
-                return res.status(400).send(error.details[0].message);
+            // const { error } = passwordResetSchema.validate(req.body);
+            // console.log(error);
+            // console.log(req.params);
+            // if (error) return res.status(400).send(error.details[0].message);
             let userId = req.params.hashedToken.split(',')[0];
             let returnToken = req.params.hashedToken.split(',')[1];
             const user = yield Users_1.UserAuth.findOne({ _id: userId });
@@ -115,7 +116,8 @@ function resetPassword(req, res, next) {
             }
         }
         catch (error) {
-            console.log('Internal Server Error!');
+            console.log(error);
+            res.status(500).json({ error: 'Internal Server Error!' });
         }
     });
 }

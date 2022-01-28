@@ -7,7 +7,6 @@ const express_session_1 = __importDefault(require("express-session"));
 const passport_ggle_1 = require("./passport/passport-ggle");
 const authRouteGgle_1 = __importDefault(require("./routes/authRouteGgle"));
 const passport_1 = __importDefault(require("passport"));
-const cookie_session_1 = __importDefault(require("cookie-session"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const emailVerify_1 = __importDefault(require("./routes/emailVerify"));
 const http_errors_1 = __importDefault(require("http-errors"));
@@ -17,10 +16,10 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = require("./database/database");
+const userRoute_1 = __importDefault(require("./routes/userRoute"));
 // routers
 // const app: Application = express();
 const app = (0, express_1.default)();
-const userRoute_1 = __importDefault(require("./routes/userRoute"));
 dotenv_1.default.config();
 app.use(express_1.default.json());
 (0, passport_ggle_1.setupGoogle)();
@@ -29,11 +28,13 @@ app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use('/', authRouteGgle_1.default);
 // Cookie session middleware to help remember user sessions.
-app.use((0, cookie_session_1.default)({
-    // name: 'session',
-    keys: [process.env.COOKIE_KEY],
-    maxAge: 24 * 60 * 60 * 100,
-}));
+// app.use(
+//   cookieSession({
+//     // name: 'session',
+//     keys: [process.env.COOKIE_KEY!],
+//     maxAge: 24 * 60 * 60 * 100,
+//   })
+// );
 app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
@@ -68,7 +69,7 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.json({
-        error: err.message,
+        error: err.status == 404 ? 'Path not found' : err.message,
     });
 });
 exports.default = app;

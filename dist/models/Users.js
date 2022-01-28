@@ -10,7 +10,6 @@ const Schema = mongoose_1.default.Schema;
 const userAuthSchema = new Schema({
     username: {
         type: String,
-        required: true,
     },
     firstName: {
         type: String,

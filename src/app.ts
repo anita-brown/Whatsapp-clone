@@ -12,13 +12,12 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import { mongoDBConnect, mongoMockConnect } from './database/database';
+import UserRouter from './routes/userRoute';
 
 // routers
 
 // const app: Application = express();
 const app = express();
-
-import UserRouter from './routes/userRoute';
 
 dotenv.config();
 
@@ -32,13 +31,13 @@ app.use(passport.session());
 
 app.use('/', authRoutes);
 // Cookie session middleware to help remember user sessions.
-app.use(
-  cookieSession({
-    // name: 'session',
-    keys: [process.env.COOKIE_KEY!],
-    maxAge: 24 * 60 * 60 * 100,
-  })
-);
+// app.use(
+//   cookieSession({
+//     // name: 'session',
+//     keys: [process.env.COOKIE_KEY!],
+//     maxAge: 24 * 60 * 60 * 100,
+//   })
+// );
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -81,7 +80,7 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
   // render the error page
   res.status(err.status || 500);
   res.json({
-    error: err.message,
+    error: err.status == 404 ? 'Path not found' : err.message,
   });
 });
 

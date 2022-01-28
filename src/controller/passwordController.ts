@@ -6,8 +6,6 @@ import PasswordResetToken from '../models/passwordResetSchema';
 
 import Joi, { ref } from 'joi';
 
-
-
 import crypto from 'crypto';
 
 import nodemailer from 'nodemailer';
@@ -15,7 +13,6 @@ import nodemailer from 'nodemailer';
 import router from '../routes/userRoute';
 
 require('dotenv').config();
-
 
 //Implementing route-handler for forgotPassword
 export async function forgotPassword(
@@ -100,8 +97,10 @@ export async function resetPassword(
       repeatPassword: Joi.ref('password'),
     });
 
-    const { error } = passwordResetSchema.validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // const { error } = passwordResetSchema.validate(req.body);
+    // console.log(error);
+    // console.log(req.params);
+    // if (error) return res.status(400).send(error.details[0].message);
 
     let userId = req.params.hashedToken.split(',')[0];
     let returnToken = req.params.hashedToken.split(',')[1];
@@ -132,7 +131,8 @@ export async function resetPassword(
       );
     }
   } catch (error) {
-    console.log('Internal Server Error!');
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error!' });
   }
 }
 

@@ -3,7 +3,7 @@ import {
   forgotPassword,
   resetPassword,
   changePassword,
-} from '../controller/userController';
+} from '../controller/passwordController';
 import { signup } from '../controller/userAuthController';
 import { getAllFriends, addFriends } from '../controller/userFriendController';
 import { updateUser } from '../controller/updateUserController';

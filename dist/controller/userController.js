@@ -148,7 +148,8 @@ function resetPassword(req, res, next) {
             }
         }
         catch (error) {
-            console.log('Internal Server Error!');
+            console.log(error);
+            res.json({ error: 'Internal Server Error!' });
         }
     });
 }

@@ -22,7 +22,6 @@ const userAuthSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
     },
     firstName: {
       type: String,
