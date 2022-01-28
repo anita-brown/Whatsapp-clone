@@ -44,6 +44,7 @@ const userAuthSchema = new Schema({
     password: {
         type: String,
         required: true,
+        select: false,
     },
     facebookId: {
         type: String,

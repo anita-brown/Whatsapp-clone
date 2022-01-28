@@ -89,12 +89,12 @@ function resetPassword(req, res, next) {
                     .required()
                     .required()
                     .error(new Error('Password most match...')),
-                repeatPassword: joi_1.default.ref('password'),
             });
-            // const { error } = passwordResetSchema.validate(req.body);
-            // console.log(error);
-            // console.log(req.params);
-            // if (error) return res.status(400).send(error.details[0].message);
+            const { error } = passwordResetSchema.validate(req.body);
+            console.log(error);
+            console.log(req.params);
+            if (error)
+                return res.status(400).send(error.details[0].message);
             let userId = req.params.hashedToken.split(',')[0];
             let returnToken = req.params.hashedToken.split(',')[1];
             const user = yield Users_1.UserAuth.findOne({ _id: userId });
@@ -117,7 +117,7 @@ function resetPassword(req, res, next) {
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ error: 'Internal Server Error!' });
+            res.status(404).json({ error: 'Password reset failed' });
         }
     });
 }
@@ -127,19 +127,19 @@ function changePassword(req, res, next) {
         const schema = joi_1.default.object({ password: joi_1.default.string().min(6).required() });
         const { error } = schema.validate(req.body);
         const { userId } = req.params;
-        const { oldPassword, password, confirmPassword } = req.body;
         try {
-            // console.log(oldPassword, password);
-            const user = yield Users_1.UserAuth.findById(req.params.userId);
+            const { oldPassword, password } = req.body;
+            const user = yield Users_1.UserAuth.findById(req.user._id).select('+password');
             if (!user) {
                 return res.status(400).send('User not found');
             }
+            console.log('victor ba');
+            console.log(oldPassword);
+            console.log(user.password);
             const result = yield bcrypt_1.default.compare(oldPassword, user.password);
+            console.log(result);
             if (!result) {
                 throw new Error('Old password doesnt match');
-            }
-            if (password !== confirmPassword) {
-                throw new Error('new password doesnt match confirm password!');
             }
             let salt = yield bcrypt_1.default.genSalt(10);
             const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);

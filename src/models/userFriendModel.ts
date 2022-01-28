@@ -3,11 +3,11 @@ import mongoose, { Schema } from 'mongoose'
 
 const friendSchema = new mongoose.Schema({
     friendId: {
-        type: Schema.Types.ObjectId, ref: 'UserFr',
+        type: Schema.Types.ObjectId, ref: 'UserAuth',
         required: [true, 'Friend must belong to UserFriend'],
     },
     userId: {
-        type: Schema.Types.ObjectId, ref: 'UserFr',
+        type: Schema.Types.ObjectId, ref: 'UserAuth',
         required: [true, 'Friend must belong to user'],
     }
 
@@ -17,7 +17,7 @@ const friendSchema = new mongoose.Schema({
         toJSON: { virtuals: true },
         toObject: { virtuals: true }
     },
-    // { timestamps: true },
+
 )
 
 friendSchema.pre(/^find/, function (next) {

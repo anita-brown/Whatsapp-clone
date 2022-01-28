@@ -13,7 +13,7 @@ export const getAllFriends = async (
 ) => {
   try {
     // req.user!.id = "61e6b1b5297bef3564732c7b"
-    const userLogin = '61e6b1b5297bef3564732c7b';
+    const userLogin = '61f41308c8b7de8620126a76';
 
 
     const friends = await Friend.find({ users: userLogin });
@@ -36,8 +36,8 @@ export const addFriends = async (
   next: NextFunction
 ) => {
   try {
-    // req.user!.id = "61e6b1b5297bef3564732c7b"
-    const userId = req.user!.id
+    const userId = '61f41308c8b7de8620126a76';
+    // const userId = req.user!.id
     let friendId = '';
 
     const { email } = req.body;

@@ -7,7 +7,6 @@ interface dataInput {
   lastName: string;
   email: string;
   password: string;
-  password2: string;
   phoneNumber: string;
   avatar: string;
 }
@@ -23,7 +22,6 @@ export const userRegisterInput = (data: dataInput) => {
   data.email = !isEmpty(data.email) ? data.email : '';
   data.lastName = !isEmpty(data.lastName) ? data.lastName : '';
   data.password = !isEmpty(data.password) ? data.password : '';
-  data.password2 = !isEmpty(data.password2) ? data.password2 : '';
   data.phoneNumber = !isEmpty(data.phoneNumber) ? data.phoneNumber : '';
   data.avatar = !isEmpty(data.avatar)
     ? data.avatar
@@ -49,17 +47,10 @@ export const userRegisterInput = (data: dataInput) => {
     errors.email = 'Email field is required';
   }
 
-  if (!Validator.equals(data.password, data.password2)) {
-    errors.password = 'Password provided does not match';
-  }
-
   if (Validator.isEmpty(data.password)) {
     errors.password = 'Password field is required';
   }
 
-  if (Validator.isEmpty(data.password2)) {
-    errors.password2 = 'Confirm Password field is required';
-  }
 
   return {
     errors,

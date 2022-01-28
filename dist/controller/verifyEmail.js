@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.verifyEmail = void 0;
+exports.protect = exports.loginUser = exports.verifyEmail = void 0;
 const Users_1 = require("../models/Users");
 const validatorUtils_1 = require("../utils/validatorUtils");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -48,7 +48,7 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     else {
         try {
-            const findUser = yield Users_1.UserAuth.findOne({ email: req.body.email });
+            const findUser = yield Users_1.UserAuth.findOne({ email: req.body.email }).select('+password');
             if (!findUser)
                 return res
                     .status(400)
@@ -61,11 +61,45 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     message: `kindly verify your account via the email sent to you`,
                 });
             const user = { email: req.params.email };
-            const accessToken = jsonwebtoken_1.default.sign(user, process.env.ACCESS_TOKEN_SECRET);
+            console.log(findUser);
+            const accessToken = jsonwebtoken_1.default.sign({ id: findUser.id }, process.env.ACCESS_TOKEN_SECRET);
             req.user = findUser;
-            res.status(201).json({ message: 'login successful', accessToken });
+            return res.status(201).json({ message: 'login successful', accessToken });
         }
-        catch (error) { }
+        catch (error) {
+            console.log(error);
+            res.status(403).json({ error });
+        }
     }
 });
 exports.loginUser = loginUser;
+const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let token;
+    // 1) Getting token and check if its there
+    console.log(req.headers.authorization);
+    if (req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+    if (!token) {
+        return res.status(401).json({
+            status: 'fail',
+            message: 'You are not logged in!, Please log in to get access.',
+        });
+    }
+    // validate token
+    const decoded = jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log(decoded);
+    // check if user still exists
+    const freshUser = yield Users_1.UserAuth.findById(decoded.id);
+    if (!freshUser) {
+        return res.status(401).json({
+            status: 'fail',
+            message: 'The user belonging to this token no longer exist.',
+        });
+    }
+    // check if user changed password after token was issued
+    req.user = freshUser;
+    next();
+});
+exports.protect = protect;

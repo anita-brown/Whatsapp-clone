@@ -9,8 +9,7 @@ const router = express.Router()
 
 router.get('/user/:confirmationCode',  verifyEmail)
 router.post('/login', loginUser)
-router.post('/friends', addFriends)
-router.get('/friends', getAllFriends)
+
 
 
 export default router;

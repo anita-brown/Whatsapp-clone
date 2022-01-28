@@ -12,7 +12,6 @@ const userRegisterInput = (data) => {
     data.email = !(0, is_empty_1.isEmpty)(data.email) ? data.email : '';
     data.lastName = !(0, is_empty_1.isEmpty)(data.lastName) ? data.lastName : '';
     data.password = !(0, is_empty_1.isEmpty)(data.password) ? data.password : '';
-    data.password2 = !(0, is_empty_1.isEmpty)(data.password2) ? data.password2 : '';
     data.phoneNumber = !(0, is_empty_1.isEmpty)(data.phoneNumber) ? data.phoneNumber : '';
     data.avatar = !(0, is_empty_1.isEmpty)(data.avatar)
         ? data.avatar
@@ -32,14 +31,8 @@ const userRegisterInput = (data) => {
     if (validator_1.default.isEmpty(data.email)) {
         errors.email = 'Email field is required';
     }
-    if (!validator_1.default.equals(data.password, data.password2)) {
-        errors.password = 'Password provided does not match';
-    }
     if (validator_1.default.isEmpty(data.password)) {
         errors.password = 'Password field is required';
-    }
-    if (validator_1.default.isEmpty(data.password2)) {
-        errors.password2 = 'Confirm Password field is required';
     }
     return {
         errors,

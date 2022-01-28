@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = void 0;
+exports.getUser = exports.updateUser = void 0;
+const Users_1 = require("../models/Users");
 const express_1 = require("express");
 const router = (0, express_1.Router)();
-const User = require('../models/userSchema');
 const upload = require('../multer');
 const cloudinary = require('../cloudinary');
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,7 +23,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         // replace the old image with the new one and add it to the request body
         req.body.avatar = result.url;
         req.body.avatarId = result.public_id;
-        const updatedUser = yield User.findOneAndUpdate(req.params.id, req.body, {
+        const updatedUser = yield Users_1.UserAuth.findOneAndUpdate({ _id: req.params.id }, {
             new: true,
             runValidators: true,
         });
@@ -34,6 +34,25 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error unable to update user',
+        });
     }
 });
 exports.updateUser = updateUser;
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield Users_1.UserAuth.findById(req.params.id);
+        res.status(200).json({
+            message: 'success',
+            data: user,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error unable to get user',
+        });
+    }
+});
+exports.getUser = getUser;

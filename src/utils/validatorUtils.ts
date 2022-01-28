@@ -9,7 +9,7 @@ export interface Login {
 export const validateLogin = (data: Login) => {
     const schema = Joi.object({
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).required()
+        password: Joi.string().min(6).required()
     })
     return schema.validate(data);
 }

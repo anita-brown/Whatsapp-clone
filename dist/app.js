@@ -56,7 +56,7 @@ app.use('/api/v1/users', authRoute_1.default);
 // Routers upon which applications will run. To be connected to the routes files.
 app.use('/api/v1/users', userRoute_1.default);
 //User auth routes
-app.use('/api/v1/users', emailVerify_1.default);
+app.use('/api/v1/user', emailVerify_1.default);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next((0, http_errors_1.default)(404));

@@ -94,13 +94,12 @@ export async function resetPassword(
         .required()
         .required()
         .error(new Error('Password most match...')),
-      repeatPassword: Joi.ref('password'),
     });
 
-    // const { error } = passwordResetSchema.validate(req.body);
-    // console.log(error);
-    // console.log(req.params);
-    // if (error) return res.status(400).send(error.details[0].message);
+    const { error } = passwordResetSchema.validate(req.body);
+    console.log(error);
+    console.log(req.params);
+    if (error) return res.status(400).send(error.details[0].message);
 
     let userId = req.params.hashedToken.split(',')[0];
     let returnToken = req.params.hashedToken.split(',')[1];
@@ -132,7 +131,7 @@ export async function resetPassword(
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error!' });
+    res.status(404).json({ error: 'Password reset failed' });
   }
 }
 
@@ -144,22 +143,20 @@ export async function changePassword(
   const schema = Joi.object({ password: Joi.string().min(6).required() });
   const { error } = schema.validate(req.body);
   const { userId } = req.params;
-  const { oldPassword, password, confirmPassword } = req.body;
 
   try {
-    // console.log(oldPassword, password);
-    const user = await UserAuth.findById(req.params.userId);
+    const { oldPassword, password } = req.body;
+    const user = await UserAuth.findById(req.user._id).select('+password');
     if (!user) {
       return res.status(400).send('User not found');
     }
-
+    console.log('victor ba');
+    console.log(oldPassword)
+    console.log(user.password);
     const result = await bcrypt.compare(oldPassword, user.password);
+    console.log(result);
     if (!result) {
       throw new Error('Old password doesnt match');
-    }
-
-    if (password !== confirmPassword) {
-      throw new Error('new password doesnt match confirm password!');
     }
 
     let salt = await bcrypt.genSalt(10);

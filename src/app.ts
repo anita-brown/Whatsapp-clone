@@ -64,7 +64,7 @@ app.use('/api/v1/users', authRouteFB);
 // Routers upon which applications will run. To be connected to the routes files.
 app.use('/api/v1/users', UserRouter);
 //User auth routes
-app.use('/api/v1/users', emailRoutes);
+app.use('/api/v1/user', emailRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
