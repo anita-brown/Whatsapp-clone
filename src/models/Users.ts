@@ -3,7 +3,9 @@ import validator from 'validator';
 
 const Schema = mongoose.Schema;
 
-interface userAuthModel {
+export interface userAuth extends mongoose.Document {
+  user: string;
+  userName: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,63 +14,75 @@ interface userAuthModel {
   isVerified: Boolean;
   status: string;
   confirmCode: string;
+  avatar: string;
+  avatarId: string;
 }
 
-const userAuthSchema = new Schema({
-  firstName: {
-    type: String,
-    required : true,
+const userAuthSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+
+    lastName: {
+      type: String,
+      required: true,
+    },
+    avatar: {
+      type: String,
+    },
+    avatarId: {
+      type: String,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      validate: {
+        validator: validator.isEmail,
+        message: 'please enter a valid email',
+      },
+    },
+    phoneNumber: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    facebookId: {
+      type: String,
+    },
+    googleId: {
+      type: String,
+    },
+    confirmCode: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Active'],
+      default: 'Pending',
+    },
   },
-
-  lastName: {
-    type: String,
-    required: true,
-  },
-
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    validate: {
-      validator: validator.isEmail,
-      message: 'please enter a valid email'
-    }
-  },
-
-  phoneNumber: {
-    type: String,
-    required: true
-  },
-
-  isVerified: {
-    type: Boolean,
-    default: true
-  },
-
-  password: {
-    type: String,
-    required: true
-  },
-
-
-  friends: {
-    type: Schema.Types.ObjectId,
-    ref: "Friends",
-  },
-
-  confirmCode: {
-    type: String,
-    required: true
-  },
-
-  status: {
-    type: String,
-    enum: ["Pending", "Active"],
-    default: "Pending"
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
   }
-}, { timestamps: true});
-
-export const UserAuth = mongoose.model<userAuthModel>(
-  'UserAuth',
-  userAuthSchema
 );
+
+export const UserAuth = mongoose.model<userAuth>('UserAuth', userAuthSchema);

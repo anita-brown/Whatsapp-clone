@@ -12,10 +12,7 @@ interface MulterFile {
   originalname: string;
   size: number;
 }
-// extend the interface to include the new fields
-// interface Request extends MulterFile {
-//   userId: string
-// }
+
 
 router
   .route('/')

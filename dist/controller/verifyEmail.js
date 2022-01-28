@@ -13,18 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.verifyEmail = void 0;
-const mockUser_model_1 = __importDefault(require("../model/mockUser.model"));
+const Users_1 = require("../models/Users");
 const validatorUtils_1 = require("../utils/validatorUtils");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //This function handles verification of email, a route with confirmation code is sent to user email on signup
 const verifyEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield mockUser_model_1.default.findOne({ confirmationCode: req.params.confirmationCode });
+        const user = yield Users_1.UserAuth.findOne({
+            confirmationCode: req.params.confirmationCode,
+        });
         if (!user) {
             return res.status(404).json({ message: 'user not found' });
         }
-        user.status = "Active";
+        user.status = 'Active';
         yield user.save((err) => {
             if (err) {
                 res.status(500).send({ message: err });
@@ -34,7 +36,7 @@ const verifyEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         res.redirect('/login');
     }
     catch (err) {
-        console.log("error", err);
+        console.log('error', err);
     }
 });
 exports.verifyEmail = verifyEmail;
@@ -46,22 +48,24 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     else {
         try {
-            const findUser = yield mockUser_model_1.default.findOne({ email: req.body.email });
+            const findUser = yield Users_1.UserAuth.findOne({ email: req.body.email });
             if (!findUser)
-                return res.status(400).json({ message: 'user does not exist, kindly signup' });
+                return res
+                    .status(400)
+                    .json({ message: 'user does not exist, kindly signup' });
             const match = yield bcryptjs_1.default.compare(req.body.password, findUser.password);
             if (!match)
                 return res.status(400).json({ message: 'invalid password' });
             if (findUser.status === 'Pending')
                 return res.status(403).json({
-                    message: `kindly verify your account via the email sent to you`
+                    message: `kindly verify your account via the email sent to you`,
                 });
             const user = { email: req.params.email };
             const accessToken = jsonwebtoken_1.default.sign(user, process.env.ACCESS_TOKEN_SECRET);
+            req.user = findUser;
             res.status(201).json({ message: 'login successful', accessToken });
         }
-        catch (error) {
-        }
+        catch (error) { }
     }
 });
 exports.loginUser = loginUser;

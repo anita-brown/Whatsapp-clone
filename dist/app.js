@@ -17,9 +17,11 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = require("./database/database");
+// routers
+// const app: Application = express();
+const app = (0, express_1.default)();
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 dotenv_1.default.config();
-const app = (0, express_1.default)();
 app.use(express_1.default.json());
 (0, passport_ggle_1.setupGoogle)();
 app.use((0, express_session_1.default)({ secret: process.env.SESSION_SECRET }));
@@ -44,6 +46,7 @@ if (process.env.NODE_ENV === 'test') {
 else {
     (0, database_1.mongoDBConnect)();
 }
+// Routers upon which applications will run. To be connected to the routes files.
 // Initialize passport
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());

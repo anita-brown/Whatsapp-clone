@@ -6,7 +6,7 @@ import {
   logout,
   protect,
   profile,
-} from '../controllers/authControllerFB';
+} from '../controller/authControllerFB';
 import setupFB from '../passport/passport-FB-Setup';
 
 const router = express.Router();
@@ -17,9 +17,7 @@ router.get('/login', login);
 
 router.get(
   '/facebook',
-  passport.authenticate('facebook', {
-    scope: ['profile'],
-  })
+  passport.authenticate('facebook')
 );
 
 // callback route to redirect

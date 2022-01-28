@@ -24,7 +24,7 @@ export const signup = async (
       email: req.body.email,
     }).then(async (user) => {
       if (user) {
-        errors.email = 'Email and phoneNumber already exists';
+        errors.email = 'Email already exists';
         return res.status(400).json({
           email: errors,
         });
@@ -35,7 +35,6 @@ export const signup = async (
           d: 'mm', // default
         });
 
-        console.log(process.env.CONFIRM_TOKEN);
 
         const token = jwt.sign(
           { email: req.body.email },
@@ -52,7 +51,7 @@ export const signup = async (
           password: req.body.password,
           password2: req.body.password2,
           phoneNumber: req.body.phoneNumber,
-          profilePicture: avatar,
+          avatar,
           confirmCode: token,
         });
 
@@ -67,18 +66,18 @@ export const signup = async (
 
         const output = `<div style="background-color:#fbfbfb; width:90%; height: 90%;">
             <div style="background-color:white; width:60%; margin: 0 auto; padding: 20px">
-            
+
            <h1>👋🏻 Hi ${newUser.firstName}</h1>
-           
-          
+
+
             <hr/>
              <p>We are happy you signed up on whatsapp.
                To start exploring our App and chat with your
                friends please confirm your email address.
              </p>
             <br/>
-           
-           
+
+
          <a href="http://${req.headers.host}/api/v1/auth/verify-email?pass=${newUser.confirmCode}" target="_blank" style="text-decoration:none; background-color:#25D366; color:white; padding: 15px; border-radius: 5px; width: 100px; margin-bottom: 5px;">Verify now!</a>
          <br/>
 
@@ -111,14 +110,14 @@ export const signup = async (
 
         newUser
           .save()
-          .then((user) =>
+          .then((user: any) =>
             res.status(201).json({
               message: 'User registered successfully',
               success: true,
               user,
             })
           )
-          .catch((err) =>
+          .catch((err:Error) =>
             res.status(400).json({ message: 'Unable to save user' })
           );
       }

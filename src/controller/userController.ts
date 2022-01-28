@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt, { hash } from 'bcrypt';
-import IUser from '../models/userSchema';
-import UserTesting from '../models/userSchema';
+import { UserAuth } from '../models/Users';
 import { validateSignUp } from '../middlewares/auth';
 import PasswordResetToken from '../models/passwordResetSchema';
 import Joi, { ref } from 'joi';
@@ -21,11 +20,11 @@ export const signup = async function (
   const { firstName, lastName, email, phoneNumber, password } = req.body;
 
   try {
-    let user = await UserTesting.findOne({
+    let user = await UserAuth.findOne({
       $or: [{ email }, { phoneNumber }],
     });
     if (user) return res.status(400).json('User exists');
-    const newUser = await UserTesting.create({
+    const newUser = await UserAuth.create({
       firstName,
       lastName,
       email,
@@ -54,7 +53,7 @@ export async function forgotPassword(
     const schema = Joi.object({ email: Joi.string().email().required() });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json(error.details[0].message);
-    const user = UserTesting.findOne(
+    const user = UserAuth.findOne(
       { email: req.body.email },
       async (err: any, user: any) => {
         if (!user) {
@@ -87,7 +86,7 @@ export async function forgotPassword(
           to: user.email,
           subject: 'Reset Password Link',
           text: 'text',
-          html: `<h1> Forgot your password? </h1> 
+          html: `<h1> Forgot your password? </h1>
               <h1>Please click on the link below to reset your password!! 👧 </h1>
               <h3> The link sent will expire in 10 minutes </h3>
               <h3> If you didn't forget your password, please ignore this email. </h3>
@@ -132,7 +131,7 @@ export async function resetPassword(
     let userId = req.params.hashedToken.split(',')[0];
     let returnToken = req.params.hashedToken.split(',')[1];
 
-    const user = await UserTesting.findOne({ _id: userId });
+    const user = await UserAuth.findOne({ _id: userId });
     // console.log(user);
 
     if (!user) {
@@ -146,7 +145,7 @@ export async function resetPassword(
     if (verifyToken) {
       const hashPassword = await bcrypt.hash(req.body.password, 10);
 
-      UserTesting.findOneAndUpdate(
+      UserAuth.findOneAndUpdate(
         { _id: user._id },
         { password: hashPassword },
         (err: any, doc: any) => {
@@ -174,7 +173,7 @@ export async function changePassword(
 
   try {
     // console.log(oldPassword, password);
-    const user = await UserTesting.findById(req.params.userId);
+    const user = await UserAuth.findById(req.params.userId);
     if (!user) {
       return res.status(400).send('User not found');
     }

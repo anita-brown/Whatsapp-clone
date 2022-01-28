@@ -1,5 +1,5 @@
 import express, { Request, Response, Application, NextFunction } from 'express';
-import { CustomUserReq } from '../models/custom';
+import { CustomRequest } from '../utils/custom';
 
 export const redirect = (req: Request, res: Response, next: NextFunction) => {
   // Login with facebook
@@ -27,7 +27,7 @@ export const login = async (
   res.send('User can now log in from this route');
 };
 
-export const profile = async (req: CustomUserReq, res: Response) => {
+export const profile = async (req: CustomRequest, res: Response) => {
   console.log(req.user);
   res.send('You are logged in, Welcome ... ' + req.user!.fullname);
 };

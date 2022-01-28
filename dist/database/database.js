@@ -8,18 +8,33 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const mongoDBConnect = () => {
     var _a;
-    const DB = (_a = process.env.MONGO_URL) === null || _a === void 0 ? void 0 : _a.replace('<PASSWORD>', process.env.MONGO_PASS);
-    mongoose_1.default.connect(DB).then(() => {
-        console.log(`DB connection successful....`);
-    });
+    try {
+        const DB = (_a = process.env.MONGO_URL) === null || _a === void 0 ? void 0 : _a.replace('<PASSWORD>', process.env.MONGO_PASS);
+        mongoose_1.default
+            .connect(DB)
+            .then(() => {
+            console.log(`DB connection successful....`);
+        })
+            .catch((err) => {
+            console.log(`DB connection error: ${err}`);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 exports.mongoDBConnect = mongoDBConnect;
 const mongoMockConnect = () => {
-    mongodb_memory_server_1.MongoMemoryServer.create().then((mongo) => {
-        const uri = mongo.getUri();
-        mongoose_1.default.connect(uri).then(() => {
-            console.log(`Mock DB connected...`);
+    try {
+        mongodb_memory_server_1.MongoMemoryServer.create().then((mongo) => {
+            const uri = mongo.getUri();
+            mongoose_1.default.connect(uri).then(() => {
+                console.log(`Mock DB connected...`);
+            });
         });
-    });
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 exports.mongoMockConnect = mongoMockConnect;

@@ -15,7 +15,8 @@ import { mongoDBConnect, mongoMockConnect } from './database/database';
 
 // routers
 
-const app: Application = express();
+// const app: Application = express();
+const app = express();
 
 import UserRouter from './routes/userRoute';
 
@@ -52,8 +53,6 @@ if (process.env.NODE_ENV === 'test') {
   mongoDBConnect();
 }
 
-
-
 // Routers upon which applications will run. To be connected to the routes files.
 
 // Initialize passport
@@ -85,6 +84,5 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     error: err.message,
   });
 });
-
 
 export default app;

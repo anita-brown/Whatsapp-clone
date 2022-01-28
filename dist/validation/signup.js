@@ -14,8 +14,8 @@ const userRegisterInput = (data) => {
     data.password = !(0, is_empty_1.isEmpty)(data.password) ? data.password : '';
     data.password2 = !(0, is_empty_1.isEmpty)(data.password2) ? data.password2 : '';
     data.phoneNumber = !(0, is_empty_1.isEmpty)(data.phoneNumber) ? data.phoneNumber : '';
-    data.profilePicture = !(0, is_empty_1.isEmpty)(data.profilePicture)
-        ? data.profilePicture
+    data.avatar = !(0, is_empty_1.isEmpty)(data.avatar)
+        ? data.avatar
         : '';
     if (!validator_1.default.isLength(data.password, { min: 6 })) {
         errors.password = 'Password should be more than 6 characters';
@@ -40,9 +40,6 @@ const userRegisterInput = (data) => {
     }
     if (validator_1.default.isEmpty(data.password2)) {
         errors.password2 = 'Confirm Password field is required';
-    }
-    if (validator_1.default.isEmpty(data.phoneNumber)) {
-        errors.phoneNumber = 'Phone Number field is required';
     }
     return {
         errors,

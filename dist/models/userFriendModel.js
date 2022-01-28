@@ -24,11 +24,11 @@ const mongoose_1 = __importStar(require("mongoose"));
 const friendSchema = new mongoose_1.default.Schema({
     friendId: {
         type: mongoose_1.Schema.Types.ObjectId, ref: 'UserFr',
-        // required: [true, 'Friend must belong to UserFriend'],
+        required: [true, 'Friend must belong to UserFriend'],
     },
     userId: {
         type: mongoose_1.Schema.Types.ObjectId, ref: 'UserFr',
-        // required: [true, 'Friend must belong to user'],    
+        required: [true, 'Friend must belong to user'],
     }
 }, {
     toJSON: { virtuals: true },

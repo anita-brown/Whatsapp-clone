@@ -9,7 +9,7 @@ interface dataInput {
   password: string;
   password2: string;
   phoneNumber: string;
-  profilePicture: string;
+  avatar: string;
 }
 
 interface error {
@@ -25,8 +25,8 @@ export const userRegisterInput = (data: dataInput) => {
   data.password = !isEmpty(data.password) ? data.password : '';
   data.password2 = !isEmpty(data.password2) ? data.password2 : '';
   data.phoneNumber = !isEmpty(data.phoneNumber) ? data.phoneNumber : '';
-  data.profilePicture = !isEmpty(data.profilePicture)
-    ? data.profilePicture
+  data.avatar = !isEmpty(data.avatar)
+    ? data.avatar
     : '';
 
   if (!Validator.isLength(data.password, { min: 6 })) {
@@ -59,10 +59,6 @@ export const userRegisterInput = (data: dataInput) => {
 
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = 'Confirm Password field is required';
-  }
-
-  if (Validator.isEmpty(data.phoneNumber)) {
-    errors.phoneNumber = 'Phone Number field is required';
   }
 
   return {
