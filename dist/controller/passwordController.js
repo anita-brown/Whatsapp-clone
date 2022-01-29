@@ -91,14 +91,11 @@ function resetPassword(req, res, next) {
                     .error(new Error('Password most match...')),
             });
             const { error } = passwordResetSchema.validate(req.body);
-            console.log(error);
-            console.log(req.params);
             if (error)
                 return res.status(400).send(error.details[0].message);
             let userId = req.params.hashedToken.split(',')[0];
             let returnToken = req.params.hashedToken.split(',')[1];
             const user = yield Users_1.UserAuth.findOne({ _id: userId });
-            // console.log(user);
             if (!user) {
                 return res.status(404).json('invalid link or expired');
             }
@@ -133,11 +130,7 @@ function changePassword(req, res, next) {
             if (!user) {
                 return res.status(400).send('User not found');
             }
-            console.log('victor ba');
-            console.log(oldPassword);
-            console.log(user.password);
             const result = yield bcrypt_1.default.compare(oldPassword, user.password);
-            console.log(result);
             if (!result) {
                 throw new Error('Old password doesnt match');
             }

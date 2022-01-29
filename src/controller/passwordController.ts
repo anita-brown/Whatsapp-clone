@@ -97,15 +97,14 @@ export async function resetPassword(
     });
 
     const { error } = passwordResetSchema.validate(req.body);
-    console.log(error);
-    console.log(req.params);
+
     if (error) return res.status(400).send(error.details[0].message);
 
     let userId = req.params.hashedToken.split(',')[0];
     let returnToken = req.params.hashedToken.split(',')[1];
 
     const user = await UserAuth.findOne({ _id: userId });
-    // console.log(user);
+
 
     if (!user) {
       return res.status(404).json('invalid link or expired');
@@ -150,11 +149,9 @@ export async function changePassword(
     if (!user) {
       return res.status(400).send('User not found');
     }
-    console.log('victor ba');
-    console.log(oldPassword)
-    console.log(user.password);
+
     const result = await bcrypt.compare(oldPassword, user.password);
-    console.log(result);
+
     if (!result) {
       throw new Error('Old password doesnt match');
     }

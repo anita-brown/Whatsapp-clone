@@ -57,7 +57,7 @@ export const loginUser = async (
           message: `kindly verify your account via the email sent to you`,
         });
       const user = { email: req.params.email };
-      console.log(findUser);
+
 
       const accessToken = jwt.sign(
         {id: findUser.id},
@@ -79,7 +79,7 @@ export const protect = async (
 ) => {
   let token;
   // 1) Getting token and check if its there
-  console.log(req.headers.authorization);
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -97,7 +97,7 @@ export const protect = async (
     token,
     process.env.ACCESS_TOKEN_SECRET as Secret
   );
-  console.log(decoded);
+
   // check if user still exists
   const freshUser = await UserAuth.findById(decoded.id);
   if (!freshUser) {

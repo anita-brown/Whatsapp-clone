@@ -61,7 +61,6 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     message: `kindly verify your account via the email sent to you`,
                 });
             const user = { email: req.params.email };
-            console.log(findUser);
             const accessToken = jsonwebtoken_1.default.sign({ id: findUser.id }, process.env.ACCESS_TOKEN_SECRET);
             req.user = findUser;
             return res.status(201).json({ message: 'login successful', accessToken });
@@ -76,7 +75,6 @@ exports.loginUser = loginUser;
 const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     // 1) Getting token and check if its there
-    console.log(req.headers.authorization);
     if (req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
@@ -89,7 +87,6 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     }
     // validate token
     const decoded = jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log(decoded);
     // check if user still exists
     const freshUser = yield Users_1.UserAuth.findById(decoded.id);
     if (!freshUser) {

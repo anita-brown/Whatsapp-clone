@@ -54,8 +54,6 @@ router
 }))
     .patch(upload.single('avatar'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
-        // res.send('heelo');
         const result = yield cloudinary.uploader.upload(req.file.path);
         // replace the old image with the new one and add it to the request body
         req.body.avatar = result.url;

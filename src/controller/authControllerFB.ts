@@ -28,6 +28,6 @@ export const login = async (
 };
 
 export const profile = async (req: CustomRequest, res: Response) => {
-  console.log(req.user);
+
   res.send('You are logged in, Welcome ... ' + req.user!.fullname);
 };
