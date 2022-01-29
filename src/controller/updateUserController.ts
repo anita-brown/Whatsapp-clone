@@ -1,10 +1,9 @@
 import { UserAuth } from '../models/Users';
 import { Router, Request, Response, NextFunction } from 'express';
 
-const router = Router();
-const upload = require('../multer');
-const cloudinary = require('../cloudinary');
 
+const cloudinary = require('../cloudinary');
+import { CustomRequest } from '../utils/custom';
 interface MulterFile {
   key: string; // Available using `S3`.
   path: string; // Available using `DiskStorage`.
@@ -14,23 +13,32 @@ interface MulterFile {
 }
 
 export const updateUser = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    console.log(req.body);
-    // res.send('heelo');
     const result = await cloudinary.uploader.upload(req.file!.path);
 
     // replace the old image with the new one and add it to the request body
     req.body.avatar = result.url;
     req.body.avatarId = result.public_id;
-    const updatedUser = await UserAuth.findOneAndUpdate(
-      { _id: req.params.id},
+    let updateData = {
+      firstName: req.body.firstName ? req.body.firstName : req.user!.firstName,
+      lastName: req.body.lastName ? req.body.lastName : req.user!.lastName,
+      avatar: req.body.avatar ? req.body.avatar : req.user!.avatar,
+      avatarId: req.body.avatarId ? req.body.avatarId : req.user!.avatarId,
+      email: req.body.email ? req.body.email : req.user!.email,
+      phoneNumber: req.body.phoneNumber
+        ? req.body.phoneNumber
+        : req.user!.phoneNumber,
+    };
+    const updatedUser = await UserAuth.findByIdAndUpdate(
+      req.user!.id,
+      updateData,
       {
         new: true,
-        runValidators: true,
+        // runValidators: true,
       }
     );
     res.status(200).json({
@@ -46,12 +54,12 @@ export const updateUser = async (
 };
 
 export const getUser = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const user = await UserAuth.findById(req.params.id);
+    const user = await UserAuth.findById(req.user!.id);
     res.status(200).json({
       message: 'success',
       data: user,

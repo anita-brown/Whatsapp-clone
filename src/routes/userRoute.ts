@@ -20,8 +20,8 @@ router.post('/friends', protect, addFriends);
 router.post('/forgotPassword', forgotPassword);
 router.post('/resetPassword/:hashedToken', resetPassword);
 
-router.patch('/changePassword',protect, changePassword);
+router.patch('/changePassword', protect, changePassword);
 router.get('/:id', getUser);
-router.patch('/:id/updateUser', protect, upload.single('avatar'), updateUser);
+router.patch('/updateUser', protect, upload.single('avatar'), updateUser);
 
 export default router;
