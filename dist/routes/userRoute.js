@@ -18,6 +18,6 @@ router.post('/friends', verifyEmail_1.protect, userFriendController_1.addFriends
 router.post('/forgotPassword', passwordController_1.forgotPassword);
 router.post('/resetPassword/:hashedToken', passwordController_1.resetPassword);
 router.patch('/changePassword', verifyEmail_1.protect, passwordController_1.changePassword);
-router.get('/:id', updateUserController_1.getUser);
+router.get('/', verifyEmail_1.protect, updateUserController_1.getUser);
 router.patch('/updateUser', verifyEmail_1.protect, upload.single('avatar'), updateUserController_1.updateUser);
 exports.default = router;

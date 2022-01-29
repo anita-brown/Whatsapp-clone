@@ -21,7 +21,7 @@ router.post('/forgotPassword', forgotPassword);
 router.post('/resetPassword/:hashedToken', resetPassword);
 
 router.patch('/changePassword', protect, changePassword);
-router.get('/:id', getUser);
+router.get('/', protect, getUser);
 router.patch('/updateUser', protect, upload.single('avatar'), updateUser);
 
 export default router;
