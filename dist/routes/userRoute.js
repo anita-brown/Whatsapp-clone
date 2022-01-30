@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const passwordController_1 = require("../controller/passwordController");
-const userAuthController_1 = require("../controller/userAuthController");
-const userFriendController_1 = require("../controller/userFriendController");
-const updateUserController_1 = require("../controller/updateUserController");
-const verifyEmail_1 = require("../controller/verifyEmail");
+const passwordController_1 = require("../controllers/passwordController");
+const userAuthController_1 = require("../controllers/userAuthController");
+const userFriendController_1 = require("../controllers/userFriendController");
+const updateUserController_1 = require("../controllers/updateUserController");
+const verifyEmail_1 = require("../controllers/verifyEmail");
 const upload = require('../multer');
 const router = express_1.default.Router();
 //reset

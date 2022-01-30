@@ -34,7 +34,6 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.login = login;
 const profile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.user);
     res.send('You are logged in, Welcome ... ' + req.user.fullname);
 });
 exports.profile = profile;

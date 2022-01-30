@@ -3,11 +3,11 @@ import {
   forgotPassword,
   resetPassword,
   changePassword,
-} from '../controller/passwordController';
-import { signup } from '../controller/userAuthController';
-import { getAllFriends, addFriends } from '../controller/userFriendController';
-import { updateUser, getUser } from '../controller/updateUserController';
-import { protect } from '../controller/verifyEmail';
+} from '../controllers/passwordController';
+import { signup } from '../controllers/userAuthController';
+import { getAllFriends, addFriends } from '../controllers/userFriendController';
+import { updateUser, getUser } from '../controllers/updateUserController';
+import { protect } from '../controllers/verifyEmail';
 
 const upload = require('../multer');
 const router = express.Router();

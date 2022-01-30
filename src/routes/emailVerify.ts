@@ -1,15 +1,10 @@
-import express from "express";
-import { verifyEmail, loginUser } from "../controller/verifyEmail";
-import { addFriends,getAllFriends } from "../controller/userFriendController";
+import express from 'express';
+import { verifyEmail, loginUser } from '../controllers/verifyEmail';
+import { addFriends, getAllFriends } from '../controllers/userFriendController';
 
+const router = express.Router();
 
-
-const router = express.Router()
-
-
-router.get('/user/:confirmationCode',  verifyEmail)
-router.post('/login', loginUser)
-
-
+router.get('/user/:confirmationCode', verifyEmail);
+router.post('/login', loginUser);
 
 export default router;

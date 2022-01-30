@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const passport_1 = __importDefault(require("passport"));
-const authControllerFB_1 = require("../controller/authControllerFB");
+const authControllerFB_1 = require("../controllers/authControllerFB");
 const passport_FB_Setup_1 = __importDefault(require("../passport/passport-FB-Setup"));
 const router = express_1.default.Router();
 (0, passport_FB_Setup_1.default)();

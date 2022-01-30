@@ -1,12 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { isLoggedIn } from '../controller/authControllerGgle';
+import { isLoggedIn } from '../controllers/authControllerGgle';
 import {
   signupGoogle,
   failedGoogleSignup,
   protectedPage,
   logout,
-} from '../controller/authControllerGgle';
+} from '../controllers/authControllerGgle';
 
 const router = express.Router();
 

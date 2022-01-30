@@ -14,8 +14,7 @@ const userFriendModel_1 = require("../models/userFriendModel");
 const Users_1 = require("../models/Users");
 const getAllFriends = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // req.user!.id = "61e6b1b5297bef3564732c7b"
-        const userLogin = '61e6b1b5297bef3564732c7b';
+        const userLogin = req.user.id;
         const friends = yield userFriendModel_1.Friend.find({ users: userLogin });
         return res.status(200).json({
             status: 'success',
@@ -32,7 +31,6 @@ const getAllFriends = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.getAllFriends = getAllFriends;
 const addFriends = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // req.user!.id = "61e6b1b5297bef3564732c7b"
         const userId = req.user.id;
         let friendId = '';
         const { email } = req.body;
