@@ -17,7 +17,7 @@ import { mongoDBConnect, mongoMockConnect } from './database/database';
 // ROUTES IMPORT
 import UserRouter from './routes/userRoute';
 import messageRoutes from "./routes/messageRoutes"
-import chatRoutes from "./routes/chatRoutes"
+import privateChatRoutes from "./routes/privateChatRoute"
 import groupRoutes from "./routes/groupRoutes"
 // routers
 
@@ -75,7 +75,7 @@ app.use('/api/v1/user', emailRoutes);
 
 app.use("api/v1/messages", messageRoutes);
 
-app.use("/api/v1/chats",chatRoutes)
+app.use("/api/v1/chats",privateChatRoutes)
 
 app.use('/api/v1/groups',groupRoutes);
 // ERROR HANDLERS =========
