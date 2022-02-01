@@ -14,8 +14,7 @@ export const getAllFriends = async (
   try {
 
     const userLogin = req.user!.id;
-
-
+    
     const friends = await Friend.find({ users: userLogin });
 
     return res.status(200).json({
